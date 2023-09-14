@@ -762,7 +762,7 @@ static bool CheckForLeaks() {
     VReport(1, "LeakSanitizer is disabled");
     return false;
   }
-  VReport(1, "LeakSanitizer: checking for leaks");
+  VReport(1, "LeakSanitizer: checking for leaks\n");
   // Inside LockStuffAndStopTheWorld we can't run symbolizer, so we can't match
   // suppressions. However if a stack id was previously suppressed, it should be
   // suppressed in future checks as well.
