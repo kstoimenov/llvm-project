@@ -5189,6 +5189,7 @@ struct VarArgAMD64Helper : public VarArgHelperBase {
     assert(!VAArgOverflowSize && !VAArgTLSCopy &&
            "finalizeInstrumentation called twice");
     if (!VAStartInstrumentationList.empty()) {
+        LLVM_DEBUG(dbgs() << " ZXCV NOT VAStartInstrumentationList: \n");
       // If there is a va_start in this function, make a backup copy of
       // va_arg_tls somewhere in the function entry block.
       IRBuilder<> IRB(MSV.FnPrologueEnd);
