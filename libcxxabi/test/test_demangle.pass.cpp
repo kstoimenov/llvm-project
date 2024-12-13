@@ -29834,6 +29834,7 @@ const char* cases[][2] =
     {"_ZN5Casts5auto_IiEEvDTnw_DapicvT__EEE", "void Casts::auto_<int>(decltype(new auto((int)())))"},
     {"_ZN5Casts7scalar_IiEEvDTcmcvT__Ecvi_EE", "void Casts::scalar_<int>(decltype((int)(), (int)()))"},
     {"_ZN5test11aIsEEDTcl3foocvT__EEES1_", "decltype(foo((short)())) test1::a<short>(short)"},
+    {"_ZN5test11bIsEEDTcp3foocvT__EEES1_", "decltype((foo)((short)())) test1::b<short>(short)"},
     {"_ZN5test21aIPFfvEEEvT_DTclfL0p_EE", "void test2::a<float (*)()>(float (*)(), decltype(fp()))"},
     {"_ZN5test21bIPFfvEEEDTclfp_EET_", "decltype(fp()) test2::b<float (*)()>(float (*)())"},
     {"_ZN5test21cIPFfvEEEvT_PFvDTclfL1p_EEE", "void test2::c<float (*)()>(float (*)(), void (*)(decltype(fp())))"},
@@ -30397,24 +30398,24 @@ void test_invalid_cases()
     assert(!passed && "demangle did not fail");
 }
 
-const char *xfail_cases[] = {
-    // FIXME: Why does clang generate the "cp" expr?
-    "_ZN5test11bIsEEDTcp3foocvT__EEES1_",
+const char *const xfail_cases[] = {
+    // Sentinel value
+    nullptr
 };
-
-const size_t num_xfails = sizeof(xfail_cases) / sizeof(xfail_cases[0]);
 
 void test_xfail_cases()
 {
     std::size_t len = 0;
     char* buf = nullptr;
-    for (std::size_t i = 0; i < num_xfails; ++i)
+    for (const char *c_str : xfail_cases)
     {
+        if (!c_str)
+            break;
         int status;
-        char* demang = __cxxabiv1::__cxa_demangle(xfail_cases[i], buf, &len, &status);
+        char* demang = __cxxabiv1::__cxa_demangle(c_str, buf, &len, &status);
         if (status != -2)
         {
-            std::printf("%s was documented as xfail but passed\n", xfail_cases[i]);
+            std::printf("%s was documented as xfail but passed\n", c_str);
             std::printf("Got status = %d\n", status);
             assert(status == -2);
         }

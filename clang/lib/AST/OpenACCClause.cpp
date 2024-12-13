@@ -444,6 +444,22 @@ OpenACCVectorClause *OpenACCVectorClause::Create(const ASTContext &C,
   return new (Mem) OpenACCVectorClause(BeginLoc, LParenLoc, IntExpr, EndLoc);
 }
 
+OpenACCFinalizeClause *OpenACCFinalizeClause::Create(const ASTContext &C,
+                                                     SourceLocation BeginLoc,
+                                                     SourceLocation EndLoc) {
+  void *Mem =
+      C.Allocate(sizeof(OpenACCFinalizeClause), alignof(OpenACCFinalizeClause));
+  return new (Mem) OpenACCFinalizeClause(BeginLoc, EndLoc);
+}
+
+OpenACCIfPresentClause *OpenACCIfPresentClause::Create(const ASTContext &C,
+                                                       SourceLocation BeginLoc,
+                                                       SourceLocation EndLoc) {
+  void *Mem = C.Allocate(sizeof(OpenACCIfPresentClause),
+                         alignof(OpenACCIfPresentClause));
+  return new (Mem) OpenACCIfPresentClause(BeginLoc, EndLoc);
+}
+
 //===----------------------------------------------------------------------===//
 //  OpenACC clauses printing methods
 //===----------------------------------------------------------------------===//
@@ -684,4 +700,13 @@ void OpenACCClausePrinter::VisitVectorClause(const OpenACCVectorClause &C) {
     printExpr(C.getIntExpr());
     OS << ")";
   }
+}
+
+void OpenACCClausePrinter::VisitFinalizeClause(const OpenACCFinalizeClause &C) {
+  OS << "finalize";
+}
+
+void OpenACCClausePrinter::VisitIfPresentClause(
+    const OpenACCIfPresentClause &C) {
+  OS << "if_present";
 }
